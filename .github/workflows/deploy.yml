@@ -15,44 +15,55 @@ jobs:
       - name: Get Code
         uses: actions/checkout@v4
 
-      # Docker setup
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Check Docker version
       - name: Docker version
         run: docker --version
 
-      # Build all services
       - name: Build Docker Compose
         run: docker compose build
 
-      # Start full stack
       - name: Start services
         run: docker compose up -d
 
-      # Wait for services
       - name: Wait for startup
         run: sleep 15
 
-      # Backend health check
       - name: Backend health check
         run: curl -f http://localhost:3500/health
 
-      # Frontend health check
       - name: Frontend health check
         run: curl -f http://localhost:80
 
-      # DB sanity check (optional)
       - name: DB container check
         run: docker ps
 
-      # Logs on failure
       - name: Show logs if fail
         if: failure()
         run: docker compose logs
 
-      # Cleanup
       - name: Shutdown containers
         if: always()
         run: docker compose down
+
+  deploy:
+    needs: ci
+    if: github.event_name == 'workflow_dispatch'   # 👈 sadece manuel çalışır
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            echo "🚀 Deploy başlıyor..."
+            cd /home/zulkuf/app
+            git pull origin master
+            docker compose down
+            docker compose up -d --build
+            echo "✅ Deploy tamamlandı"
+    
