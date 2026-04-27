@@ -30,7 +30,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --watchAll=false --passWithNoTests --testPathIgnorePatterns='<rootDir>/src/App.test.js",
+    "test": "react-scripts test --watchAll=false --passWithNoTests --testPathIgnorePatterns=<rootDir>/src/App.test.js",
     "eject": "react-scripts eject",
     "lint": "eslint src --ext .js,.jsx --max-warnings=0 || true",
     "format": "prettier --write ."
