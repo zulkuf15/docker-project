@@ -31,3 +31,9 @@ Sunucuya SSH ile bağlanır>
 Repo günceller (git pull)>
 Docker container rebuild eder>
 Uygulamayı ayağa kaldırır
+
+## 🚀 Local Setup
+""" bash
+git clone https://github.com/USERNAME/REPO.git"""
+cd REPO
+docker compose up -d --build
