@@ -15,6 +15,9 @@ Bu proje, bir uygulamanın Docker + GitHub Actions ile otomatik olarak AWS EC2 s
 🔐 SSH ile güvenli bağlantı
 🔁 CI/CD pipeline (end-to-end)
 
+## 🏗️ Architecture
+Developer → GitHub → GitHub Actions → SSH → AWS EC2 → Docker → App 🚀
+
 ## Project Structure
 
 - **backend**: Node.js application serving as the backend.
