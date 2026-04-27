@@ -1,6 +1,7 @@
-name: deploy
+name: Deploy
 
 on:
+
   push:
     branches:
       - master
@@ -8,51 +9,75 @@ on:
   workflow_dispatch:
 
 jobs:
-  ci:
+  test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Get Code
         uses: actions/checkout@v4
+      - name: Setup Node (with cache)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
+      # 🔹 Backend
 
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm ci
+      - name: Run backend tests
+        run: |
+          cd backend
+          npm test
+      # 🔹 Frontend
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+      - name: Run frontend tests
+        run: |
+          cd frontend
+          npm test -- --watchAll=false
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v4
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      - name: Docker version
-        run: docker --version
-
-      - name: Build Docker Compose
+      - name: Build Docker images
         run: docker compose build
-
       - name: Start services
         run: docker compose up -d
-
-      - name: Wait for startup
-        run: sleep 15
-
-      - name: Backend health check
-        run: curl -f http://localhost:3500/health
-
-      - name: Frontend health check
+      # 🔁 Sağlam health check (sleep yerine)
+      - name: Wait for backend
+        run: |
+          for i in {1..10}; do
+            curl -f http://localhost:3500/health && break
+            echo "Backend bekleniyor..."
+            sleep 5
+          done
+      - name: Check frontend
         run: curl -f http://localhost:80
-
-      - name: DB container check
+      - name: Show running containers
         run: docker ps
-
       - name: Show logs if fail
         if: failure()
         run: docker compose logs
-
       - name: Shutdown containers
         if: always()
         run: docker compose down
 
   deploy:
-    needs: ci
+    needs: build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Deploy to AWS EC2
+      - name: Deploy to VM
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VM_HOST }}
@@ -60,9 +85,9 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
             echo "🚀 Deploy başlıyor..."
-            cd /home/zulkuf/app
+            cd /home/ubuntu/app/docker-project
+            git config --global --add [safe.directory](http://safe.directory) /home/ubuntu/app/docker-project
             git pull origin master
-            docker compose down
+            # Daha iyi: downtime azaltır
             docker compose up -d --build
-            echo "✅ Deploy tamamlandı"
-    
+            echo "✅ Deploy tamamlandı" codum böyle
