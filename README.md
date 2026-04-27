@@ -8,11 +8,12 @@
 
 Bu proje, bir uygulamanın Docker + GitHub Actions ile otomatik olarak AWS EC2 sunucusuna deploy edilmesini sağlar.
 
-## Prerequisites
-
-Before you begin, ensure that you have the following installed:
-
-- [Docker](https://www.docker.com/get-started)
+## ✨ Highlights
+⚡ Auto Deploy: git push → otomatik deploy
+🐳 Dockerized App
+☁️ AWS EC2 üzerinde canlı sistem
+🔐 SSH ile güvenli bağlantı
+🔁 CI/CD pipeline (end-to-end)
 
 ## Project Structure
 
