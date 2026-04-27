@@ -86,7 +86,7 @@ jobs:
           script: |
             echo "🚀 Deploy başlıyor..."
             cd /home/ubuntu/app/docker-project
-            git config --global --add [safe.directory](http://safe.directory) /home/ubuntu/app/docker-project
+            git config --global --add safe.directory /home/***/app/docker-project
             git pull origin master
             # Daha iyi: downtime azaltır
             docker compose up -d --build
