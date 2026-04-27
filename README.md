@@ -24,10 +24,10 @@ Compute: EC2 (Ubuntu Server)
 Deployment: SSH + Docker Compose
 
 ## ⚙️ CI/CD Workflow
-Developer kodu GitHub’a push eder
+Developer kodu GitHub’a push eder >
 GitHub Actions pipeline tetiklenir
-Pipeline:
-Sunucuya SSH ile bağlanır
-Repo günceller (git pull)
-Docker container rebuild eder
+Pipeline:>
+Sunucuya SSH ile bağlanır>
+Repo günceller (git pull)>
+Docker container rebuild eder>
 Uygulamayı ayağa kaldırır
